@@ -4,6 +4,7 @@ package br.com.bruno.factory.connection;
 import br.com.bruno.factory.ConnectionFactory;
 import br.com.bruno.factory.DbException;
 import br.com.bruno.model.Cliente;
+import br.com.bruno.view.PessoasView.NovoCliente;
 
 import javax.swing.*;
 import java.sql.Connection;
@@ -17,12 +18,14 @@ public class ClienteDao {
         String sql = "INSERT INTO tb_cliente(nome,cpf) VALUES (?,?)";
         Connection connection = null;
         PreparedStatement pstm = null;
+        String cpf = cliente.getCpf();
+        String cpfFormatado = cpf.substring(0, 3) + "." + cpf.substring(3, 6) + "." + cpf.substring(6, 9) + "-" + cpf.substring(9, 11);
         try {
             //Create connection for DB
             connection = ConnectionFactory.getConnection();
             pstm = connection.prepareStatement(sql);
             pstm.setString(1, cliente.getNome());
-            pstm.setString(2,cliente.getCpf());
+            pstm.setString(2, cpfFormatado);
 //            pstm.execute();
             int line = pstm.executeUpdate();
             if (line > 0) {
@@ -41,7 +44,8 @@ public class ClienteDao {
             }
         }
     }
-    public void update(Cliente cliente)  {
+
+    public void update(Cliente cliente) {
         String sql = "UPDATE tb_cliente set nome = ?, cpf=?" + "WHERE id = ?";
         Connection connection = null;
         PreparedStatement pstm = null;
@@ -52,14 +56,15 @@ public class ClienteDao {
             pstm.setString(2, cliente.getCpf());
             pstm.setInt(3, cliente.getId());
             int line = pstm.executeUpdate();
-            if (line > 0){
-                System.out.println("Cliente foi Altarado com sucesso");
-            }else{
+            if (line > 0) {
+                System.out.println("Cliente foi alterado com sucesso");
+            } else {
+
                 System.out.println("Cliente não Cadastrado");
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }  finally {
+        } finally {
             //close Connection
             try {
                 ConnectionFactory.closePreparedStatement(pstm);
@@ -113,14 +118,14 @@ public class ClienteDao {
             pstm = connection.prepareStatement(sql);
             pstm.setInt(1, id);
             int line = pstm.executeUpdate();
-            if (line > 0){
+            if (line > 0) {
                 System.out.println("Cliente foi deletada do banco de dados");
-            }else{
+            } else {
                 System.out.println("Cliente não Cadastrado");
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }  finally {
+        } finally {
             //close Connection
             try {
                 ConnectionFactory.closePreparedStatement(pstm);
@@ -131,12 +136,13 @@ public class ClienteDao {
         }
     }
 
-    public Cliente findByCodigo(Integer id) {
+    public Cliente findById(Integer id) {
         String sql = "SELECT * FROM tb_cliente where id = ?";
         Connection connection = null;
         PreparedStatement pstm = null;
         ResultSet rset = null;
         Cliente cliente = new Cliente();
+
         try {
             connection = ConnectionFactory.getConnection();
             pstm = connection.prepareStatement(sql);
@@ -150,23 +156,64 @@ public class ClienteDao {
                     System.out.println("Codigo: " + id + ", nome: " + cliente.getNome() + ", CPF: " + cliente.getCpf());
                 }
             } else {
+                JOptionPane.showMessageDialog(null, "Cliente não foi encontrado no banco de dados", "Tente novamente", JOptionPane.ERROR_MESSAGE);
                 System.out.println("Cliente não encontrado");
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }  finally {
+        } finally {
             //close Connection
             try {
                 ConnectionFactory.closePreparedStatement(pstm);
                 ConnectionFactory.closeConnection(connection);
                 ConnectionFactory.closeResultSet(rset);
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
         }
         return cliente;
     }
+    public Cliente findByCpf(String cpf) {
 
+        String cpfSemPontos = cpf.replace("\\.", "").replace("-",""); // Remover os pontos do CPF
+        String sql = "SELECT * FROM tb_cliente WHERE REPLACE(REPLACE(cpf, '.', ''), '-', '') = ?";
 
+        Connection connection = null;
+        PreparedStatement pstm = null;
+        ResultSet rset = null;
+        Cliente cliente = new Cliente();
+
+        try {
+            connection = ConnectionFactory.getConnection();
+            pstm = connection.prepareStatement(sql);
+            pstm.setString(1, cpfSemPontos); // Definir o CPF sem pontos como parâmetro
+            rset = pstm.executeQuery();
+            if (rset.next()) {
+                cliente.setId(rset.getInt("id"));
+                cliente.setNome(rset.getString("nome"));
+                cliente.setCpf(rset.getString("cpf"));
+                System.out.println("Codigo: " + cliente.getId() + ", nome: " + cliente.getNome() + ", CPF: " + cliente.getCpf());
+            } else {
+                int  confirma =JOptionPane.showConfirmDialog(null, "Cliente não encontrado, Cadastrar um novo?","Confirm",JOptionPane.YES_NO_CANCEL_OPTION);
+                if (confirma == JOptionPane.YES_OPTION){
+                    NovoCliente novoCliente = new NovoCliente();}
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //close Connection
+            try {
+                ConnectionFactory.closePreparedStatement(pstm);
+                ConnectionFactory.closeConnection(connection);
+                ConnectionFactory.closeResultSet(rset);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return cliente;
+    }
 
 }
+
+

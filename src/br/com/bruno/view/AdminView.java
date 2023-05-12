@@ -1,13 +1,19 @@
 package br.com.bruno.view;
 
 import br.com.bruno.factory.connection.ClienteDao;
+import br.com.bruno.factory.connection.EstoqueDao;
+import br.com.bruno.factory.connection.ProdutoDao;
 import br.com.bruno.factory.connection.VendedorDao;
 import br.com.bruno.model.Cliente;
+import br.com.bruno.model.Estoque;
 import br.com.bruno.model.Produto;
 import br.com.bruno.model.Vendedor;
 import br.com.bruno.view.PessoasView.EditarClientes;
 import br.com.bruno.view.PessoasView.EditarVendedor;
 import br.com.bruno.view.PessoasView.NovoPessoas;
+import br.com.bruno.view.ProdutoView.EditarProduto;
+import br.com.bruno.view.ProdutoView.NovoEstoque;
+import br.com.bruno.view.ProdutoView.NovoProduto;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -33,15 +39,32 @@ public class AdminView extends JFrame {
     private JTabbedPane tabbedPane2;
     private JLabel labelNome;
     private JLabel labelCPF;
+    private JButton btnBuscarProduto;
+    private JTextField txtIdProd;
+    private JTable table2;
+    private JButton btnNovoPRod;
+    private JButton btnEditarProd;
+    private JButton btnExcluirProd;
+    private JButton btnCancelarProd;
+    private JLabel lblNameProd;
+    private JLabel lblTipoProd;
+    private JLabel lblPrecoProd;
+    private JTextField txtIdEstoque;
+    private JButton btnBuscarEstoque;
+    private JTable table3;
+    private JButton btnNovoEstoque;
+    private JButton btnCancelarEstoque;
+    private ButtonGroup buttonGroup1;
 
 
     Cliente cliente = new Cliente();
     ClienteDao clienteDao = new ClienteDao();
     Vendedor vendedor = new Vendedor();
     VendedorDao vendedorDao = new VendedorDao();
-
-
-
+    Produto produto = new Produto();
+    ProdutoDao produtoDao = new ProdutoDao();
+    Estoque estoque = new Estoque();
+    static EstoqueDao estoqueDao = new EstoqueDao();
 
     public AdminView() {
         setContentPane(mainPainel);
@@ -50,21 +73,6 @@ public class AdminView extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-
-//        JComboBox<String> comboBox1 = new JComboBox<>();
-//        JComboBox<String> comboBox2 = new JComboBox<>();
-//        comboBox1.addItem("<<Selecione o Tipo>>");
-//        comboBox1.addItem("Tubes");
-//        comboBox1.addItem("Chicletes");
-//        comboBox1.addItem("Marshmallows");
-//        comboBox1.setSelectedIndex(0);
-//        boxTipo.setModel(comboBox1.getModel());
-//
-//        comboBox2.addItem("1");
-//        comboBox2.addItem("2");
-//        comboBox2.addItem("3");
-//        comboBox2.setSelectedIndex(0);
-//        boxEstoque.setModel(comboBox2.getModel());
 
         buscarButton.addActionListener(new ActionListener() {
             @Override
@@ -75,7 +83,7 @@ public class AdminView extends JFrame {
         cadastrarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-              NovoPessoas novoPessoas = new NovoPessoas();
+                NovoPessoas novoPessoas = new NovoPessoas();
             }
 
         });
@@ -85,71 +93,78 @@ public class AdminView extends JFrame {
                 int id = Integer.parseInt(txtID.getText());
                 String nome = labelNome.getText();
                 String cpf = labelCPF.getText();
-                if(clienteRadioButton.isSelected()){
-                    EditarClientes editarClientes  = new EditarClientes(id,nome,cpf);
-                }else if (vendedorRadioButton.isSelected()){
-                    EditarVendedor editarVendedor = new EditarVendedor(id,nome,cpf);
+                if (clienteRadioButton.isSelected()) {
+                    EditarClientes editarClientes = new EditarClientes(id, nome, cpf);
+                } else if (vendedorRadioButton.isSelected()) {
+                    EditarVendedor editarVendedor = new EditarVendedor(id, nome, cpf);
                 }
             }
         });
         excluirButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            deletePessoas();
+                deletePessoas();
             }
         });
         cancelarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-             dispose();
+                buttonGroup1.clearSelection();
+                txtID.setText("");
 
             }
         });
-//        btnCadastrarPro.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                cadastrarProduto();
-//            }
-//        });
-//        btnbuscarProdutos.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                buscarProdutoByID();
-//            }
-//        });
-//
-//        btnAltPro.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                alterarProdutos();
-//            }
-//
-//
-//        });
-//        btnExcluirPro.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                excluirProdutos();
-//            }
-//        });
-//        btnCancelarPro.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                dispose();
-//            }
-//        });
-//        btnEstoqueCadastrar.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                addProdutoEstoque();
-//            }
-//        });
-//        btnListarEstoque.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                listarEstoque();
-//            }
-//        });
+        btnNovoPRod.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NovoProduto novoProduto = new NovoProduto();
+            }
+        });
+        btnBuscarProduto.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                buscaProduto();
+            }
+
+
+        });
+        btnEditarProd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int id = Integer.parseInt(txtIdProd.getText());
+                String nome = lblNameProd.getText();
+                String tipo = lblTipoProd.getText();
+                double preco = Double.parseDouble(lblPrecoProd.getText());
+
+                EditarProduto prod = new EditarProduto(id, nome, tipo, preco);
+
+
+            }
+        });
+        btnCancelarProd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                txtIdProd.setText("");
+            }
+        });
+        btnExcluirProd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                excluirProdutos();
+            }
+        });
+        btnBuscarEstoque.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                buscarEstoque();
+            }
+        });
+        btnNovoEstoque.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NovoEstoque novoEstoque = new NovoEstoque();
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -305,6 +320,46 @@ public class AdminView extends JFrame {
         }
     }
 
+    public static class estoqueTableModel extends AbstractTableModel {
+
+        private final String[] COLUMNS = {"Código", "Nome", "Tipo", "Preço", "Quantidade"};
+        final  List<Estoque> estoques = estoqueDao.innerJoin();
+        @Override
+        public int getRowCount() {
+            return estoques.size() -1;
+        }
+        @Override
+        public int getColumnCount() {
+            return COLUMNS.length;
+        }
+        @Override
+        public Object getValueAt(int linha, int coluna) {
+            return switch (coluna) {
+                case 0 -> estoques.get(linha).getProduto().getId();
+                case 1 -> estoques.get(linha).getProduto().getNome();
+                case 2 -> estoques.get(linha).getProduto().getTipo();
+                case 3 -> estoques.get(linha).getProduto().getPreco();
+                case 4 -> estoques.get(linha).getQuantidade();
+                default -> null;
+            };
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            return COLUMNS[column];
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            if (getValueAt(0, columnIndex) != null) {
+                return getValueAt(0, columnIndex).getClass();
+
+            } else {
+                return Object.class;
+            }
+        }
+    }
+
     private void findPessoas() {
         clienteTableModel modelC = new clienteTableModel();
         vendedorTableModel modelV = new vendedorTableModel();
@@ -316,7 +371,7 @@ public class AdminView extends JFrame {
                 int id = Integer.parseInt(txtID.getText());
 
                 if (clienteRadioButton.isSelected()) {
-                    cliente = clienteDao.findByCodigo(id);
+                    cliente = clienteDao.findById(id);
                     if (cliente != null) {
                         labelNome.setText(cliente.getNome());
                         labelCPF.setText(cliente.getCpf());
@@ -351,6 +406,7 @@ public class AdminView extends JFrame {
             }
 
         }
+
     }
 
     private void deletePessoas() {
@@ -358,127 +414,101 @@ public class AdminView extends JFrame {
             cliente.setId(Integer.parseInt(txtID.getText()));
 
             if (cliente != null) {
-                int resposta =  JOptionPane.showConfirmDialog(null,"Deseja realmente excluir?","Confirmação",JOptionPane.YES_NO_OPTION);
-                if (resposta == JOptionPane.YES_OPTION){
+                int resposta = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir?", "Confirmação", JOptionPane.YES_NO_OPTION);
+                if (resposta == JOptionPane.YES_OPTION) {
                     clienteDao.delete(cliente.getId());
                     JOptionPane.showMessageDialog(null, "Clinte Deletado com sucesso!");
-                }else {
+                } else {
                     dispose();
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Cliente Não encontrado", "Tente novamente", JOptionPane.ERROR_MESSAGE);
             }
-            txtID.setText("");
+            txtIdProd.setText("");
+
         } else if (vendedorRadioButton.isSelected()) {
             vendedor.setId(Integer.parseInt(txtID.getText()));
 
             if (vendedor != null) {
-                int resposta =  JOptionPane.showConfirmDialog(null,"Deseja realmente excluir?","Confirmação",JOptionPane.YES_NO_OPTION);
-                if (resposta == JOptionPane.YES_OPTION){
+                int resposta = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir?", "Confirmação", JOptionPane.YES_NO_OPTION);
+                if (resposta == JOptionPane.YES_OPTION) {
                     vendedorDao.delete(vendedor.getId());
                     JOptionPane.showMessageDialog(null, "Vendedor Deletado com sucesso!");
-                }else {
+                } else {
                     dispose();
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Vendedor Não encontrado", "Tente novamente", JOptionPane.ERROR_MESSAGE);
             }
-            txtID.setText("");
+            txtIdProd.setText("");
+
         }
     }
 
-//    private void cadastrarProduto() {
-//        produto.setNome(txtNomeProduto.getText());
-//        produto.setPreco(Double.parseDouble(txtPrecoProduto.getText()));
-//        produto.setTipo(boxTipo.getSelectedItem().toString()); //setar os itens da box pra pode salva
-//
-//        produtoDao.save(produto);
-//        AdminView.produtoTableModel model = new AdminView.produtoTableModel();
-//        table2.setModel(model);
-//        model.produtos.add(produto);
-//        if (!(!produto.getNome().isEmpty())) {
-//            JOptionPane.showMessageDialog(null, "Porfavor Preencher todos os campos", "Tente de Novo", JOptionPane.ERROR_MESSAGE);
-//        } else {
-//            JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!");
-//        }
-//    }
-//
-//    private void buscarProdutoByID() {
-//        AdminView.produtoTableModel model = new AdminView.produtoTableModel();
-//        table2.setModel(model);
-//        try {
-//            int id = Integer.parseInt(txtIdProduto.getText());
-//            produto = ProdutoDao.findByCodigo(id);
-//            if (produto != null) {
-//                model.produtos.add(produto);
-//            }
-//        } catch (NumberFormatException e) {
-//            // Lidar com o erro caso o valor inserido não seja um número válido
-//            JOptionPane.showMessageDialog(this, "O valor inserido não é um número válido.", "Erro", JOptionPane.ERROR_MESSAGE);
-//        }
-//    }
-//
-//    private void buscarTodosProdutos() {
-//        produtoTableModel model = new produtoTableModel();
-//        table2.setModel(model);
-//        for (Produto p : produtoDao.findproduto()) {
-//            model.produtos.add(p);
-//        }
-//    }
-//
-//    private void alterarProdutos() {
-//        produto.setId(Integer.parseInt(txtIdProduto.getText()));
-//        produto.setNome(txtNomeProduto.getText());
-//        produto.setTipo(boxTipo.getSelectedItem().toString());
-//        produto.setPreco(Double.parseDouble(txtPrecoProduto.getText()));
-//        produtoDao.update(produto);
-//
-//        txtIdProduto.setText("");
-//        txtNomeProduto.setText("");
-//        txtPrecoProduto.setText("");
-//
-//    }
-//
-//    private void excluirProdutos() {
-//        produto.setId(Integer.parseInt(txtIdProduto.getText()));
-//        produtoDao.delete(produto.getId());
-//        if (produto != null) {
-//            JOptionPane.showMessageDialog(null, "Produto Deletado com sucesso!");
-//        } else {
-//            JOptionPane.showMessageDialog(null, "Produto Não encontrado", "Tente novamente", JOptionPane.ERROR_MESSAGE);
-//        }
-//        txtIdProduto.setText("");
-//    }
-//
-//    private void addProdutoEstoque() {
-//    }
-//
-//    private void listarEstoque() {
-//    }
+    private void buscaProduto() {
+
+        if (!txtIdProd.getText().isEmpty()) {
+            try {
+                int id = Integer.parseInt(txtIdProd.getText());
+                produto = ProdutoDao.findByID(id);
+                if (produto != null) {
+                    lblNameProd.setText(produto.getNome());
+                    lblTipoProd.setText(produto.getTipo());
+                    lblPrecoProd.setText(String.valueOf(produto.getPreco()));
+                }
+            } catch (NumberFormatException e) {
+                // Lidar com o erro caso o valor inserido não seja um número válido
+                JOptionPane.showMessageDialog(this, "O valor inserido não é um número válido.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } else {
+            produtoTableModel model = new produtoTableModel();
+            table2.setModel(model);
+            for (Produto p : produtoDao.findByProduto()) {
+                model.produtos.add(p);
+            }
+        }
+    }
+    //
+    private void excluirProdutos() {
+        produto.setId(Integer.parseInt(txtIdProd.getText()));
+        if (produto != null) {
+            int resposta = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir?", "Confirmação", JOptionPane.YES_NO_OPTION);
+            if (resposta == JOptionPane.YES_OPTION) {
+                produtoDao.delete(produto.getId());
+                JOptionPane.showMessageDialog(null, "Produto Deletado com sucesso!");
+            } else {
+                dispose();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Produto Não encontrado", "Tente novamente", JOptionPane.ERROR_MESSAGE);
+        }
+        txtIdProd.setText("");
+        lblPrecoProd.setText("**");
+        lblNameProd.setText("**");
+        lblTipoProd.setText("**");
+    }
+    private void buscarEstoque(){
+
+        estoqueTableModel model = new  estoqueTableModel();
+        table3.setModel(model);
+        for (Estoque e : estoqueDao.innerJoin()) {
+            model.estoques.add(e);
+
+            System.out.println(e);
+            break;
+        }
 
 
-    public JTextField getTxtID() {
-        return txtID;
+
+
+
+
+
     }
 
-    public void setTxtID(JTextField txtID) {
-        this.txtID = txtID;
-    }
 
-    public JTextField getTxtNome() {
-        return txtNome;
-    }
 
-    public void setTxtNome(JTextField txtNome) {
-        this.txtNome = txtNome;
-    }
 
-    public JTextField getTxtCPF() {
-        return txtCPF;
-    }
-
-    public void setTxtCPF(JTextField txtCPF) {
-        this.txtCPF = txtCPF;
-    }
 }
 

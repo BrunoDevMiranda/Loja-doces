@@ -1,23 +1,51 @@
 package br.com.bruno.application;
 
 
-import br.com.bruno.factory.ConnectionFactory;
-import br.com.bruno.factory.connection.ClienteDao;
-import br.com.bruno.factory.connection.ProdutoDao;
-import br.com.bruno.model.Cliente;
-import br.com.bruno.model.Produto;
 
-public class Main  {
-    public static void main(String[] args)  {
+import br.com.bruno.factory.DbException;
+import br.com.bruno.factory.connection.*;
+import br.com.bruno.model.*;
 
+
+
+
+public class Main {
+    public static void main(String[] args) throws DbException {
+        Cliente cliente = new Cliente();
+        Vendedor vendedor = new Vendedor();
+        VendedorDao vendedorDao = new VendedorDao();
+        VendaDao vendaDao = new VendaDao();
+
+        cliente = new ClienteDao().findById(2);
+        vendedor = new VendedorDao().findByCodigo(1);
+
+        Venda venda = new Venda();
+        ItemVenda itemVenda = new ItemVenda();
         Produto produto = new Produto();
-        ProdutoDao produtodao = new ProdutoDao();
+        ProdutoDao produtoDao = new ProdutoDao();
 
-        produto.setNome("Cafe");
-        produto.setId(10);
-        produtodao.update(produto);
+        produto = produtoDao.findByID(3);
+
+        Estoque estoque = new Estoque();
+        EstoqueDao estoqueDao = new EstoqueDao();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
+
 
 
 

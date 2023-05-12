@@ -155,6 +155,7 @@ public class VendedorDao {
                     System.out.println("Codigo: " + id + ", nome: " + vendedor.getNome() + ", CPF: " + vendedor.getCpf());
                 }
             } else {
+                JOptionPane.showMessageDialog(null, "Vendedor não foi encontrado no banco de dados", "Tente novamente", JOptionPane.ERROR_MESSAGE);
                 System.out.println("vendedor não encontrado");
             }
         } catch (Exception e) {

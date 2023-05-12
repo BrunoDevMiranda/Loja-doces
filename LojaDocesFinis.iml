@@ -12,5 +12,7 @@
     <orderEntry type="library" exported="" name="image" level="project" />
     <orderEntry type="library" exported="" name="mysql.connector.j" level="application" />
     <orderEntry type="library" name="jgoodies.forms" level="application" />
+    <orderEntry type="library" name="document" level="project" />
+    <orderEntry type="library" name="itextpdf.kernel" level="application" />
   </component>
 </module>

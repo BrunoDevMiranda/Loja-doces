@@ -78,7 +78,7 @@ public class ProdutoDao {
         }
     }
 
-    public List<Produto> findproduto() throws RuntimeException {
+    public List<Produto> findByProduto() throws RuntimeException {
         String sql = "SELECT * FROM tb_produto ";
         List<Produto> produtos = new ArrayList<>();
         Connection connection = null;
@@ -142,7 +142,7 @@ public class ProdutoDao {
         }
     }
 
-    public static Produto findByCodigo(Integer id) {
+    public static Produto findByID(Integer id) {
         String sql = "SELECT * FROM tb_produto where ID = ?";
         Connection connection = null;
         PreparedStatement pstm = null;
@@ -161,6 +161,7 @@ public class ProdutoDao {
                 if (id != null) {
                     System.out.println("Codigo: " + id + ", nome: " + produto.getNome() + ", Tipo: " + produto.getTipo());                }
             } else {
+                JOptionPane.showMessageDialog(null, "Produto não encontrado ", "Tente novamente", JOptionPane.ERROR_MESSAGE);
                 System.out.println("produto não encontrado");
             }
         } catch (Exception e) {
