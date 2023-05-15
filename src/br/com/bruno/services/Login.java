@@ -5,6 +5,8 @@ import java.util.Objects;
 
 public class Login {
 
+    private int ID;
+
     private String usuario;
     private String senha;
     private String tipoUsuario;
@@ -33,11 +35,18 @@ public class Login {
         this.tipoUsuario = tipoUsuario;
     }
 
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Login)) return false;
-        Login login = (Login) o;
+        if (!(o instanceof Login login)) return false;
         return Objects.equals(usuario, login.usuario) && Objects.equals(senha, login.senha);
     }
 

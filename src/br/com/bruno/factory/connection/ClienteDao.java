@@ -26,7 +26,7 @@ public class ClienteDao {
             pstm = connection.prepareStatement(sql);
             pstm.setString(1, cliente.getNome());
             pstm.setString(2, cpfFormatado);
-//            pstm.execute();
+
             int line = pstm.executeUpdate();
             if (line > 0) {
                 System.out.println("Cliente foi cadastrado com sucesso");
@@ -152,9 +152,7 @@ public class ClienteDao {
                 cliente.setId(rset.getInt("id"));
                 cliente.setNome(rset.getString("nome"));
                 cliente.setCpf(rset.getString("cpf"));
-                if (id != null) {
-                    System.out.println("Codigo: " + id + ", nome: " + cliente.getNome() + ", CPF: " + cliente.getCpf());
-                }
+                System.out.println("Codigo: " + id + ", nome: " + cliente.getNome() + ", CPF: " + cliente.getCpf());
             } else {
                 JOptionPane.showMessageDialog(null, "Cliente não foi encontrado no banco de dados", "Tente novamente", JOptionPane.ERROR_MESSAGE);
                 System.out.println("Cliente não encontrado");
@@ -167,8 +165,7 @@ public class ClienteDao {
                 ConnectionFactory.closePreparedStatement(pstm);
                 ConnectionFactory.closeConnection(connection);
                 ConnectionFactory.closeResultSet(rset);
-            } catch (Exception e) {
-
+            } catch (Exception ignored) {
             }
         }
         return cliente;
@@ -197,7 +194,6 @@ public class ClienteDao {
                 int  confirma =JOptionPane.showConfirmDialog(null, "Cliente não encontrado, Cadastrar um novo?","Confirm",JOptionPane.YES_NO_CANCEL_OPTION);
                 if (confirma == JOptionPane.YES_OPTION){
                     NovoCliente novoCliente = new NovoCliente();}
-
             }
         } catch (Exception e) {
             e.printStackTrace();

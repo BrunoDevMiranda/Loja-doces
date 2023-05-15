@@ -84,7 +84,7 @@
                     </constraints>
                     <properties>
                       <icon value="estoque.png"/>
-                      <text value="Cadastrar Estoque Manual"/>
+                      <text value="Cadastrar Estoque"/>
                     </properties>
                   </component>
                   <component id="ceb9e" class="javax.swing.JLabel">

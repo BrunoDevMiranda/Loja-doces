@@ -6,6 +6,7 @@ import br.com.bruno.model.Produto;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class EditarProduto extends JFrame {
     private JPanel mainPainel;
@@ -40,52 +41,18 @@ public class EditarProduto extends JFrame {
         comboBox1.setSelectedIndex(0);
         boxTipo.setModel(comboBox1.getModel());
 
-        cancelarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
+        cancelarButton.addActionListener(e -> dispose());
+        salvarButton.addActionListener(e -> {
+            produto.setNome(txtNameProd.getText());
+            produto.setPreco(Double.parseDouble(txtPreco.getText()));
+            produto.setTipo(Objects.requireNonNull(boxTipo.getSelectedItem()).toString()); //setar os itens da box pra pode salva
+            produtoDao.update(produto);
+            if (produto.getNome().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Porfavor Preencher todos os campos", "Tente de Novo", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!");
             }
         });
-        salvarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                produto.setNome(txtNameProd.getText());
-                produto.setPreco(Double.parseDouble(txtPreco.getText()));
-                produto.setTipo(boxTipo.getSelectedItem().toString()); //setar os itens da box pra pode salva
-                produtoDao.update(produto);
-                if (!(!produto.getNome().isEmpty())) {
-                    JOptionPane.showMessageDialog(null, "Porfavor Preencher todos os campos", "Tente de Novo", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!");
-                }
-            }
-
-        });
-    }
-
-
-    public JTextField getTxtNameProd() {
-        return txtNameProd;
-    }
-
-    public void setTxtNameProd(JTextField txtNameProd) {
-        this.txtNameProd = txtNameProd;
-    }
-
-    public JTextField getTxtPreco() {
-        return txtPreco;
-    }
-
-    public void setTxtPreco(JTextField txtPreco) {
-        this.txtPreco = txtPreco;
-    }
-
-    public JLabel getLblIdProd() {
-        return lblIdProd;
-    }
-
-    public void setLblIdProd(JLabel lblIdProd) {
-        this.lblIdProd = lblIdProd;
     }
 
     public static void main(String[] args) {

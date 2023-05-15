@@ -517,7 +517,7 @@
                         <properties>
                           <font name="JetBrains Mono" size="20" style="3"/>
                           <icon value="desenvolvimento-de-produto.png"/>
-                          <text value="Cadastro e Buscar de Estoque"/>
+                          <text value="Cadastro e Busca de Estoque"/>
                         </properties>
                       </component>
                       <component id="cfe83" class="javax.swing.JLabel">
@@ -590,6 +590,55 @@
                           <text value="Cancelar"/>
                         </properties>
                       </component>
+                    </children>
+                  </grid>
+                  <grid id="c99af" layout-manager="FormLayout">
+                    <rowspec value="center:d:noGrow"/>
+                    <rowspec value="top:4dlu:noGrow"/>
+                    <rowspec value="center:max(d;4px):noGrow"/>
+                    <rowspec value="top:4dlu:noGrow"/>
+                    <rowspec value="center:d:grow"/>
+                    <colspec value="fill:d:grow"/>
+                    <constraints>
+                      <tabbedpane title="Ingredientes"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="db90a" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <forms defaultalign-horz="false"/>
+                        </constraints>
+                        <properties>
+                          <font name="JetBrains Mono" size="20" style="3"/>
+                          <icon value="prod.png"/>
+                          <text value="Cadastro e consulta de ingredientes"/>
+                        </properties>
+                      </component>
+                      <component id="7d504" class="javax.swing.JButton" binding="buscarIngredientes">
+                        <constraints>
+                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                          <forms defaultalign-horz="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Buscar"/>
+                        </properties>
+                      </component>
+                      <scrollpane id="c619e">
+                        <constraints>
+                          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="fad69" class="javax.swing.JTable" binding="table4" default-binding="true">
+                            <constraints/>
+                            <properties/>
+                          </component>
+                        </children>
+                      </scrollpane>
                     </children>
                   </grid>
                 </children>

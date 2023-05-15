@@ -247,7 +247,7 @@
                     <properties>
                       <font name="JetBrains Mono" size="20" style="3"/>
                       <icon value="desenvolvimento-de-produto.png"/>
-                      <text value="Buscar de Estoque"/>
+                      <text value="Buscar Estoque"/>
                     </properties>
                   </component>
                   <component id="e4db4" class="javax.swing.JLabel">

@@ -1,50 +1,51 @@
 package br.com.bruno.application;
 
 
+import br.com.bruno.view.AdminView;
+import br.com.bruno.view.LoginView;
 
-import br.com.bruno.factory.DbException;
-import br.com.bruno.factory.connection.*;
-import br.com.bruno.model.*;
-
-
+import javax.swing.*;
 
 
 public class Main {
-    public static void main(String[] args) throws DbException {
-        Cliente cliente = new Cliente();
-        Vendedor vendedor = new Vendedor();
-        VendedorDao vendedorDao = new VendedorDao();
-        VendaDao vendaDao = new VendaDao();
+    public static void main(String[] args) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    new LoginView();
 
-        cliente = new ClienteDao().findById(2);
-        vendedor = new VendedorDao().findByCodigo(1);
-
-        Venda venda = new Venda();
-        ItemVenda itemVenda = new ItemVenda();
-        Produto produto = new Produto();
-        ProdutoDao produtoDao = new ProdutoDao();
-
-        produto = produtoDao.findByID(3);
-
-        Estoque estoque = new Estoque();
-        EstoqueDao estoqueDao = new EstoqueDao();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(AdminView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

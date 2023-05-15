@@ -4,8 +4,7 @@ import br.com.bruno.factory.connection.ProdutoDao;
 import br.com.bruno.model.Produto;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class NovoProduto extends JFrame {
     private JPanel mainPainel;
@@ -33,26 +32,17 @@ public class NovoProduto extends JFrame {
         comboBox1.setSelectedIndex(0);
         boxTipo.setModel(comboBox1.getModel());
 
-        cancelarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
+        cancelarButton.addActionListener(e -> dispose());
+        salvarButton.addActionListener(e -> {
+            produto.setNome(txtNomeProduto.getText());
+            produto.setPreco(Double.parseDouble(txtPrecoProduto.getText()));
+            produto.setTipo(Objects.requireNonNull(boxTipo.getSelectedItem()).toString()); //setar os itens da box pra pode salva
+            produtoDao.save(produto);
+            if (produto.getNome().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Porfavor Preencher todos os campos", "Tente de Novo", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!");
             }
-        });
-        salvarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                produto.setNome(txtNomeProduto.getText());
-                produto.setPreco(Double.parseDouble(txtPrecoProduto.getText()));
-                produto.setTipo(boxTipo.getSelectedItem().toString()); //setar os itens da box pra pode salva
-                produtoDao.save(produto);
-                if (!(!produto.getNome().isEmpty())) {
-                    JOptionPane.showMessageDialog(null, "Porfavor Preencher todos os campos", "Tente de Novo", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!");
-                }
-            }
-
         });
     }
 
@@ -63,17 +53,11 @@ public class NovoProduto extends JFrame {
             for (javax.swing.UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    {
-
-                    }
+                    new NovoProduto();
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
                  UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NovoProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-
-        NovoProduto novoProduto = new NovoProduto();
-
+            java.util.logging.Logger.getLogger(NovoProduto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);        }
     }
 }

@@ -19,12 +19,14 @@ public class VendedorDao {
         String sql = "INSERT INTO tb_vendedor(nome,cpf) VALUES (?,?)";
         Connection connection = null;
         PreparedStatement pstm = null;
+        String cpf = vendedor.getCpf();
+        String cpfFormatado = cpf.substring(0, 3) + "." + cpf.substring(3, 6) + "." + cpf.substring(6, 9) + "-" + cpf.substring(9, 11);
         try {
             //Create connection for DB
             connection = ConnectionFactory.getConnection();
             pstm = connection.prepareStatement(sql);
             pstm.setString(1, vendedor.getNome());
-            pstm.setString(2,vendedor.getCpf());
+            pstm.setString(2,cpfFormatado);
 
 //            pstm.execute();
             int line = pstm.executeUpdate();
@@ -151,9 +153,7 @@ public class VendedorDao {
                 vendedor.setId(rset.getInt("id"));
                 vendedor.setNome(rset.getString("nome"));
                 vendedor.setCpf(rset.getString("cpf"));
-                if (id != null) {
-                    System.out.println("Codigo: " + id + ", nome: " + vendedor.getNome() + ", CPF: " + vendedor.getCpf());
-                }
+                System.out.println("Codigo: " + id + ", nome: " + vendedor.getNome() + ", CPF: " + vendedor.getCpf());
             } else {
                 JOptionPane.showMessageDialog(null, "Vendedor não foi encontrado no banco de dados", "Tente novamente", JOptionPane.ERROR_MESSAGE);
                 System.out.println("vendedor não encontrado");

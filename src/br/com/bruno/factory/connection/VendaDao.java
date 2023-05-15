@@ -15,7 +15,7 @@ import java.sql.*;
 
 
     public class VendaDao {
-        public void save(Venda venda) throws DbException {
+        public void save(Venda venda) {
             Connection connection = null;
             PreparedStatement pstm = null;
 

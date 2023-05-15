@@ -1,13 +1,7 @@
 package br.com.bruno.view;
 
-import br.com.bruno.factory.connection.ClienteDao;
-import br.com.bruno.factory.connection.EstoqueDao;
-import br.com.bruno.factory.connection.ProdutoDao;
-import br.com.bruno.factory.connection.VendedorDao;
-import br.com.bruno.model.Cliente;
-import br.com.bruno.model.Estoque;
-import br.com.bruno.model.Produto;
-import br.com.bruno.model.Vendedor;
+import br.com.bruno.factory.connection.*;
+import br.com.bruno.model.*;
 import br.com.bruno.view.PessoasView.EditarClientes;
 import br.com.bruno.view.PessoasView.EditarVendedor;
 import br.com.bruno.view.PessoasView.NovoPessoas;
@@ -17,8 +11,6 @@ import br.com.bruno.view.ProdutoView.NovoProduto;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +46,8 @@ public class AdminView extends JFrame {
     private JTable table3;
     private JButton btnNovoEstoque;
     private JButton btnCancelarEstoque;
+    private JTable table4;
+    private JButton buscarIngredientes;
     private ButtonGroup buttonGroup1;
 
 
@@ -63,108 +57,58 @@ public class AdminView extends JFrame {
     VendedorDao vendedorDao = new VendedorDao();
     Produto produto = new Produto();
     ProdutoDao produtoDao = new ProdutoDao();
-    Estoque estoque = new Estoque();
+    private IngredientesDao ingredientesDao = new IngredientesDao();
     static EstoqueDao estoqueDao = new EstoqueDao();
 
     public AdminView() {
         setContentPane(mainPainel);
-        setTitle("Bem Vindo");
+        setTitle("Bem Vindo Amin");
         setSize(700, 510);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
-        buscarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                findPessoas();
+        buscarButton.addActionListener(e -> findPessoas());
+        cadastrarButton.addActionListener(e -> {
+            NovoPessoas novoPessoas = new NovoPessoas();
+        });
+        editarButton.addActionListener(e -> {
+            int id = Integer.parseInt(txtID.getText());
+            String nome = labelNome.getText();
+            String cpf = labelCPF.getText();
+            if (clienteRadioButton.isSelected()) {
+                EditarClientes editarClientes = new EditarClientes(id, nome, cpf);
+            } else if (vendedorRadioButton.isSelected()) {
+                EditarVendedor editarVendedor = new EditarVendedor(id, nome, cpf);
             }
         });
-        cadastrarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                NovoPessoas novoPessoas = new NovoPessoas();
-            }
+        excluirButton.addActionListener(e -> deletePessoas());
+        cancelarButton.addActionListener(e -> {
+            buttonGroup1.clearSelection();
+            txtID.setText("");
 
         });
-        editarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int id = Integer.parseInt(txtID.getText());
-                String nome = labelNome.getText();
-                String cpf = labelCPF.getText();
-                if (clienteRadioButton.isSelected()) {
-                    EditarClientes editarClientes = new EditarClientes(id, nome, cpf);
-                } else if (vendedorRadioButton.isSelected()) {
-                    EditarVendedor editarVendedor = new EditarVendedor(id, nome, cpf);
-                }
-            }
+        btnNovoPRod.addActionListener(e -> {
+            NovoProduto novoProduto = new NovoProduto();
         });
-        excluirButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deletePessoas();
-            }
-        });
-        cancelarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buttonGroup1.clearSelection();
-                txtID.setText("");
+        btnBuscarProduto.addActionListener(e -> buscaProduto());
+        btnEditarProd.addActionListener(e -> {
+            int id = Integer.parseInt(txtIdProd.getText());
+            String nome = lblNameProd.getText();
+            String tipo = lblTipoProd.getText();
+            double preco = Double.parseDouble(lblPrecoProd.getText());
 
-            }
-        });
-        btnNovoPRod.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                NovoProduto novoProduto = new NovoProduto();
-            }
-        });
-        btnBuscarProduto.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buscaProduto();
-            }
+            EditarProduto prod = new EditarProduto(id, nome, tipo, preco);
 
 
         });
-        btnEditarProd.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int id = Integer.parseInt(txtIdProd.getText());
-                String nome = lblNameProd.getText();
-                String tipo = lblTipoProd.getText();
-                double preco = Double.parseDouble(lblPrecoProd.getText());
-
-                EditarProduto prod = new EditarProduto(id, nome, tipo, preco);
-
-
-            }
+        btnCancelarProd.addActionListener(e -> txtIdProd.setText(""));
+        btnExcluirProd.addActionListener(e -> excluirProdutos());
+        btnBuscarEstoque.addActionListener(e -> buscarEstoque());
+        btnNovoEstoque.addActionListener(e -> {
+            NovoEstoque novoEstoque = new NovoEstoque();
         });
-        btnCancelarProd.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                txtIdProd.setText("");
-            }
-        });
-        btnExcluirProd.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                excluirProdutos();
-            }
-        });
-        btnBuscarEstoque.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buscarEstoque();
-            }
-        });
-        btnNovoEstoque.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                NovoEstoque novoEstoque = new NovoEstoque();
-            }
-        });
+        buscarIngredientes.addActionListener(e -> buscarIngredientes());
     }
 
     public static void main(String[] args) {
@@ -181,8 +125,6 @@ public class AdminView extends JFrame {
                  UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(AdminView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-
-        // Cria a instância da classe AdminView após definir o Look and Feel
 
     }
 
@@ -204,12 +146,15 @@ public class AdminView extends JFrame {
             if (linha >= 0 && linha < clientes.size()) {
                 Cliente cliente = clientes.get(linha);
                 switch (coluna) {
-                    case 0:
+                    case 0 -> {
                         return cliente.getId();
-                    case 1:
+                    }
+                    case 1 -> {
                         return cliente.getNome();
-                    case 2:
+                    }
+                    case 2 -> {
                         return cliente.getCpf();
+                    }
                 }
             }
             return null;
@@ -247,15 +192,12 @@ public class AdminView extends JFrame {
 
         @Override
         public Object getValueAt(int linha, int coluna) {
-            switch (coluna) {
-                case 0:
-                    return vendedores.get(linha).getId();
-                case 1:
-                    return vendedores.get(linha).getNome();
-                case 2:
-                    return vendedores.get(linha).getCpf();
-            }
-            return null;
+            return switch (coluna) {
+                case 0 -> vendedores.get(linha).getId();
+                case 1 -> vendedores.get(linha).getNome();
+                case 2 -> vendedores.get(linha).getCpf();
+                default -> null;
+            };
         }
 
         @Override
@@ -291,17 +233,13 @@ public class AdminView extends JFrame {
 
         @Override
         public Object getValueAt(int linha, int coluna) {
-            switch (coluna) {
-                case 0:
-                    return produtos.get(linha).getId();
-                case 1:
-                    return produtos.get(linha).getNome();
-                case 2:
-                    return produtos.get(linha).getTipo();
-                case 3:
-                    return produtos.get(linha).getPreco();
-            }
-            return null;
+            return switch (coluna) {
+                case 0 -> produtos.get(linha).getId();
+                case 1 -> produtos.get(linha).getNome();
+                case 2 -> produtos.get(linha).getTipo();
+                case 3 -> produtos.get(linha).getPreco();
+                default -> null;
+            };
         }
 
         @Override
@@ -323,15 +261,18 @@ public class AdminView extends JFrame {
     public static class estoqueTableModel extends AbstractTableModel {
 
         private final String[] COLUMNS = {"Código", "Nome", "Tipo", "Preço", "Quantidade"};
-        final  List<Estoque> estoques = estoqueDao.innerJoin();
+        final List<Estoque> estoques = estoqueDao.innerJoin();
+
         @Override
         public int getRowCount() {
-            return estoques.size() -1;
+            return estoques.size() - 1;
         }
+
         @Override
         public int getColumnCount() {
             return COLUMNS.length;
         }
+
         @Override
         public Object getValueAt(int linha, int coluna) {
             return switch (coluna) {
@@ -340,6 +281,48 @@ public class AdminView extends JFrame {
                 case 2 -> estoques.get(linha).getProduto().getTipo();
                 case 3 -> estoques.get(linha).getProduto().getPreco();
                 case 4 -> estoques.get(linha).getQuantidade();
+                default -> null;
+            };
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            return COLUMNS[column];
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            if (getValueAt(0, columnIndex) != null) {
+                return getValueAt(0, columnIndex).getClass();
+
+            } else {
+                return Object.class;
+            }
+        }
+    }
+
+    public static class ingredienteTableModel extends AbstractTableModel {
+
+        private final String[] COLUMNS = {"Código", "Nome", "Peso líquido"};
+        IngredientesDao ingredientesDao = new IngredientesDao();
+        final List<Ingredientes> ingredientes = ingredientesDao.findingredientes();
+
+        public int getRowCount() {
+            return ingredientes.size() - 1;
+        }
+
+        @Override
+        public int getColumnCount() {
+            return COLUMNS.length;
+        }
+
+        @Override
+        public Object getValueAt(int linha, int coluna) {
+            return switch (coluna) {
+                case 0 -> ingredientes.get(linha).getID();
+                case 1 -> ingredientes.get(linha).getNome();
+                case 2 -> ingredientes.get(linha).getPeso_liquido();
+
                 default -> null;
             };
         }
@@ -392,9 +375,7 @@ public class AdminView extends JFrame {
             if (clienteRadioButton.isSelected()) {
 
                 table1.setModel(modelC);
-                for (Cliente c : clienteDao.findCliente()) {
-                    modelC.clientes.add(c);
-                }
+                modelC.clientes.addAll(clienteDao.findCliente());
 
             } else if (vendedorRadioButton.isSelected()) {
 
@@ -451,11 +432,9 @@ public class AdminView extends JFrame {
             try {
                 int id = Integer.parseInt(txtIdProd.getText());
                 produto = ProdutoDao.findByID(id);
-                if (produto != null) {
-                    lblNameProd.setText(produto.getNome());
-                    lblTipoProd.setText(produto.getTipo());
-                    lblPrecoProd.setText(String.valueOf(produto.getPreco()));
-                }
+                lblNameProd.setText(produto.getNome());
+                lblTipoProd.setText(produto.getTipo());
+                lblPrecoProd.setText(String.valueOf(produto.getPreco()));
             } catch (NumberFormatException e) {
                 // Lidar com o erro caso o valor inserido não seja um número válido
                 JOptionPane.showMessageDialog(this, "O valor inserido não é um número válido.", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -464,11 +443,10 @@ public class AdminView extends JFrame {
         } else {
             produtoTableModel model = new produtoTableModel();
             table2.setModel(model);
-            for (Produto p : produtoDao.findByProduto()) {
-                model.produtos.add(p);
-            }
+            model.produtos.addAll(produtoDao.findByProduto());
         }
     }
+
     //
     private void excluirProdutos() {
         produto.setId(Integer.parseInt(txtIdProd.getText()));
@@ -488,9 +466,10 @@ public class AdminView extends JFrame {
         lblNameProd.setText("**");
         lblTipoProd.setText("**");
     }
-    private void buscarEstoque(){
 
-        estoqueTableModel model = new  estoqueTableModel();
+    private void buscarEstoque() {
+
+        estoqueTableModel model = new estoqueTableModel();
         table3.setModel(model);
         for (Estoque e : estoqueDao.innerJoin()) {
             model.estoques.add(e);
@@ -498,16 +477,17 @@ public class AdminView extends JFrame {
             System.out.println(e);
             break;
         }
-
-
-
-
-
-
-
     }
 
+    private void buscarIngredientes() {
+        ingredienteTableModel model = new ingredienteTableModel();
+        table4.setModel(model);
+        for (Ingredientes i: ingredientesDao.findingredientes()){
+            model.ingredientes.add(i);
+            break;
+        }
 
+    }
 
 
 }
