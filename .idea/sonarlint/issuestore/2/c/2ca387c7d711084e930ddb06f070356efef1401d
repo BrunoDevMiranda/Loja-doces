@@ -1,0 +1,13 @@
+
+J
+java:S1604!"(Make this anonymous inner class a lambda(¬µ§ƒψÿÿÿÿ8·™εάÿ0
+E
+java:S1604@"(Make this anonymous inner class a lambda(Ό¨‡8Η™εάÿ0
+O
+java:S1199N"-Extract this nested code block into a method.(ÒΜβ–ψÿÿÿÿ8Φ™εάÿ0
+v	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(φΡΑ¨8Β…έÿ0
+a
+java:S1854W"?Remove this useless assignment to local variable "novoPessoas".(δ–Ϋ©ϋÿÿÿÿ8φ™εάÿ0
+J	java:S108N")Either remove or fill this block of code.(ÒΜβ–ψÿÿÿÿ8φ™εάÿ0
+R
+java:S1481W"0Remove this unused "novoPessoas" local variable.(δ–Ϋ©ϋÿÿÿÿ8φ™εάÿ0
